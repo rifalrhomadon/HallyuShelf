@@ -1,6 +1,7 @@
 import Home from './Home';
-import Details from './Details';
+import Album from './Album';
+import AlbumDetails from './AlbumDetails';
 import Playlist from './Playlist';
 import Profile from './Profile';
 
-export { Home, Details, Playlist, Profile };
+export { Home, Album, AlbumDetails, Playlist, Profile };

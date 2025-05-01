@@ -5,7 +5,7 @@ import { newReleases, recommendedAlbums } from '../../data.jsx';
 import ListHorizontal from '../../components/ListHorizontal.jsx';
 import ItemSmall from '../../components/ItemSmall.jsx';
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
