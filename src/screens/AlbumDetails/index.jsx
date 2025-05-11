@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Easing } from 'react-native';
 import { ArrowLeft, Heart, More, Play } from 'iconsax-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -7,10 +7,139 @@ const AlbumDetails = () => {
   const navigation = useNavigation();
   const { params: { album } } = useRoute();
 
+  // Animasi untuk header
+  const headerTranslateY = useRef(new Animated.Value(-50)).current;
+  const headerOpacity = useRef(new Animated.Value(0)).current;
+
+  // Animasi untuk konten album
+  const coverScale = useRef(new Animated.Value(0.8)).current;
+  const infoOpacity = useRef(new Animated.Value(0)).current;
+  const infoTranslateX = useRef(new Animated.Value(30)).current;
+
+  // Animasi untuk daftar lagu
+  const trackOpacity = useRef(new Animated.Value(0)).current;
+  const trackTranslateY = useRef(new Animated.Value(20)).current;
+
+  // Animasi untuk deskripsi
+  const descOpacity = useRef(new Animated.Value(0)).current;
+  const descTranslateY = useRef(new Animated.Value(20)).current;
+
+  // Inisialisasi animasi saat komponen mount
+  useEffect(() => {
+    Animated.sequence([
+      // Animasi header
+      Animated.parallel([
+        Animated.timing(headerTranslateY, {
+          toValue: 0,
+          duration: 500,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+        Animated.timing(headerOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]),
+
+      // Animasi cover album
+      Animated.spring(coverScale, {
+        toValue: 1,
+        friction: 5,
+        useNativeDriver: true,
+      }),
+
+      // Animasi info album
+      Animated.parallel([
+        Animated.timing(infoOpacity, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(infoTranslateX, {
+          toValue: 0,
+          duration: 400,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]),
+
+      // Animasi daftar lagu
+      Animated.parallel([
+        Animated.timing(trackOpacity, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(trackTranslateY, {
+          toValue: 0,
+          duration: 400,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]),
+
+      // Animasi deskripsi
+      Animated.parallel([
+        Animated.timing(descOpacity, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(descTranslateY, {
+          toValue: 0,
+          duration: 400,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]),
+    ]).start();
+  }, [coverScale, descOpacity, descTranslateY, headerOpacity, headerTranslateY, infoOpacity, infoTranslateX, trackOpacity, trackTranslateY]);
+
+  // Render item lagu dengan animasi stagger
+  const renderTrackItem = (song, index) => {
+    const itemOpacity = trackOpacity.interpolate({
+      inputRange: [0, 0.5, 1],
+      outputRange: [0, 0, 1],
+      extrapolate: 'clamp',
+    });
+
+    const itemTranslateY = trackTranslateY.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, -20 + (index * 5)],
+      extrapolate: 'clamp',
+    });
+
+    return (
+      <Animated.View
+        key={index}
+        style={{
+          opacity: itemOpacity,
+          transform: [{ translateY: itemTranslateY }],
+        }}
+      >
+        <TouchableOpacity style={styles.trackItem}>
+          <Text style={styles.trackNumber}>{index + 1}</Text>
+          <View style={styles.trackInfo}>
+            <Text style={styles.trackTitle}>{song.title}</Text>
+            <Text style={styles.trackDuration}>{song.duration}</Text>
+          </View>
+          <More size={20} color="#666" />
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      {/* Header with back button */}
-      <View style={styles.header}>
+      {/* Animated Header */}
+      <Animated.View style={[
+        styles.header,
+        {
+          opacity: headerOpacity,
+          transform: [{ translateY: headerTranslateY }],
+        },
+      ]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <ArrowLeft size={24} color="#4682B4" />
         </TouchableOpacity>
@@ -18,13 +147,27 @@ const AlbumDetails = () => {
         <TouchableOpacity>
           <More size={24} color="#4682B4" />
         </TouchableOpacity>
-      </View>
+      </Animated.View>
 
       <ScrollView>
         {/* Album Cover and Basic Info */}
         <View style={styles.albumHeader}>
-          <Image source={{ uri: album.cover }} style={styles.albumCover} />
-          <View style={styles.albumInfo}>
+          <Animated.Image
+            source={{ uri: album.cover }}
+            style={[
+              styles.albumCover,
+              { transform: [{ scale: coverScale }] },
+            ]}
+          />
+          <Animated.View
+            style={[
+              styles.albumInfo,
+              {
+                opacity: infoOpacity,
+                transform: [{ translateX: infoTranslateX }],
+              },
+            ]}
+          >
             <Text style={styles.albumTitle}>{album.title}</Text>
             <Text style={styles.albumArtist}>{album.artist}</Text>
             <Text style={styles.albumDetails}>
@@ -39,34 +182,42 @@ const AlbumDetails = () => {
                 <Heart size={20} color="#4682B4" variant={album.isLiked ? 'Bold' : 'Linear'} />
               </TouchableOpacity>
             </View>
-          </View>
+          </Animated.View>
         </View>
 
         {/* Track List */}
-        <View style={styles.trackList}>
+        <Animated.View
+          style={[
+            styles.trackList,
+            {
+              opacity: trackOpacity,
+              transform: [{ translateY: trackTranslateY }],
+            },
+          ]}
+        >
           <Text style={styles.sectionTitle}>Track List</Text>
-          {album.songs.map((song, index) => (
-            <TouchableOpacity key={index} style={styles.trackItem}>
-              <Text style={styles.trackNumber}>{index + 1}</Text>
-              <View style={styles.trackInfo}>
-                <Text style={styles.trackTitle}>{song.title}</Text>
-                <Text style={styles.trackDuration}>{song.duration}</Text>
-              </View>
-              <More size={20} color="#666" />
-            </TouchableOpacity>
-          ))}
-        </View>
+          {album.songs.map(renderTrackItem)}
+        </Animated.View>
 
         {/* Album Description */}
-        <View style={styles.description}>
+        <Animated.View
+          style={[
+            styles.description,
+            {
+              opacity: descOpacity,
+              transform: [{ translateY: descTranslateY }],
+            },
+          ]}
+        >
           <Text style={styles.sectionTitle}>About This Album</Text>
           <Text style={styles.descriptionText}>{album.description}</Text>
-        </View>
+        </Animated.View>
       </ScrollView>
     </View>
   );
 };
 
+// Styles tetap sama seperti sebelumnya
 const styles = StyleSheet.create({
   container: {
     flex: 1,

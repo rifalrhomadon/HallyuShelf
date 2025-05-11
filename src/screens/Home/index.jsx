@@ -1,44 +1,27 @@
-import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, TextInput, Pressable, FlatList } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { ScrollView, StyleSheet, Text, View, TextInput, Pressable, FlatList, Animated, Easing } from 'react-native';
 import { SearchNormal } from 'iconsax-react-native';
 import { newReleases, recommendedAlbums } from '../../data.jsx';
 import ListHorizontal from '../../components/ListHorizontal.jsx';
 import ItemSmall from '../../components/ItemSmall.jsx';
 
-const Home = ({ navigation }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  return (
-    <View style={styles.container}>
-      {/* Header */}
-      <Header />
-
-      {/* Search Bar */}
-      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-
-      <ScrollView>
-        <Text style={styles.sectionTitle}>New Releases</Text>
-        <ListHorizontal albums={newReleases} />
-
-        <Text style={styles.sectionTitle}>Recommended Albums</Text>
-        <FlatList
-          data={recommendedAlbums}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => <ItemSmall album={item} />}
-        />
-      </ScrollView>
-    </View>
-  );
-};
-
-const Header = () => (
-  <View style={styles.header}>
+const AnimatedHeader = ({ headerOpacity, headerTranslateY }) => (
+  <Animated.View style={[
+    styles.header,
+    {
+      opacity: headerOpacity,
+      transform: [{ translateY: headerTranslateY }],
+    },
+  ]}>
     <Text style={styles.title}>HallyuSelf</Text>
-  </View>
+  </Animated.View>
 );
 
-const SearchBar = ({ searchQuery, setSearchQuery }) => (
-  <View style={styles.searchBarWrapper}>
+const AnimatedSearchBar = ({ searchBarScale, searchQuery, setSearchQuery }) => (
+  <Animated.View style={[
+    styles.searchBarWrapper,
+    { transform: [{ scale: searchBarScale }] },
+  ]}>
     <View style={styles.searchBar}>
       <TextInput
         style={styles.searchInput}
@@ -51,8 +34,87 @@ const SearchBar = ({ searchQuery, setSearchQuery }) => (
         <SearchNormal size={24} color={'#fff'} />
       </Pressable>
     </View>
-  </View>
+  </Animated.View>
 );
+
+const Home = ({ navigation }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const headerOpacity = useRef(new Animated.Value(0)).current;
+  const headerTranslateY = useRef(new Animated.Value(-20)).current;
+  const searchBarScale = useRef(new Animated.Value(0.8)).current;
+  const titleFade = useRef(new Animated.Value(0)).current;
+  const contentFade = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(headerOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(headerTranslateY, {
+          toValue: 0,
+          duration: 500,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]),
+      Animated.spring(searchBarScale, {
+        toValue: 1,
+        friction: 5,
+        useNativeDriver: true,
+      }),
+      Animated.timing(titleFade, {
+        toValue: 1,
+        duration: 300,
+        delay: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(contentFade, {
+        toValue: 1,
+        duration: 500,
+        delay: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [headerOpacity, headerTranslateY, searchBarScale, titleFade, contentFade]); // Tambahkan semua dependencies
+
+  return (
+    <View style={styles.container}>
+      <AnimatedHeader
+        headerOpacity={headerOpacity}
+        headerTranslateY={headerTranslateY}
+      />
+      <AnimatedSearchBar
+        searchBarScale={searchBarScale}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
+
+      <ScrollView>
+        <Animated.View style={{ opacity: titleFade }}>
+          <Text style={styles.sectionTitle}>New Releases</Text>
+        </Animated.View>
+        <Animated.View style={{ opacity: contentFade }}>
+          <ListHorizontal albums={newReleases} />
+        </Animated.View>
+
+        <Animated.View style={{ opacity: titleFade }}>
+          <Text style={styles.sectionTitle}>Recommended Albums</Text>
+        </Animated.View>
+        <Animated.View style={{ opacity: contentFade }}>
+          <FlatList
+            data={recommendedAlbums}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => <ItemSmall album={item} />}
+          />
+        </Animated.View>
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

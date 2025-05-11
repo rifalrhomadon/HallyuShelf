@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Animated, Easing } from 'react-native';
 import { More } from 'iconsax-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { kpopAlbums } from '../../data';
@@ -8,22 +8,110 @@ const Album = () => {
   const navigation = useNavigation();
   const [selectedTab, setSelectedTab] = useState('all');
 
+  // Animation values
+  const headerOpacity = useRef(new Animated.Value(0)).current;
+  const headerTranslateY = useRef(new Animated.Value(-20)).current;
+  const tabOpacity = useRef(new Animated.Value(0)).current;
+  const tabTranslateY = useRef(new Animated.Value(20)).current;
+  const itemOpacity = useRef(new Animated.Value(0)).current;
+  const itemScale = useRef(new Animated.Value(0.9)).current;
+
   const filteredAlbums = selectedTab === 'all'
     ? kpopAlbums
     : kpopAlbums.filter(album => album.type === selectedTab);
 
+  // Initialize animations
+  useEffect(() => {
+    Animated.sequence([
+      // Header animation
+      Animated.parallel([
+        Animated.timing(headerOpacity, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(headerTranslateY, {
+          toValue: 0,
+          duration: 400,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]),
+
+      // Tab bar animation
+      Animated.parallel([
+        Animated.timing(tabOpacity, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(tabTranslateY, {
+          toValue: 0,
+          duration: 400,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]),
+
+      // Album items animation
+      Animated.parallel([
+        Animated.timing(itemOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.spring(itemScale, {
+          toValue: 1,
+          friction: 4,
+          useNativeDriver: true,
+        }),
+      ]),
+    ]).start();
+  }, [headerOpacity, headerTranslateY, itemOpacity, itemScale, tabOpacity, tabTranslateY]);
+
+  // Re-animate when tab changes
+  useEffect(() => {
+    itemOpacity.setValue(0);
+    itemScale.setValue(0.9);
+
+    Animated.parallel([
+      Animated.timing(itemOpacity, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(itemScale, {
+        toValue: 1,
+        friction: 4,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [itemOpacity, itemScale, selectedTab]);
+
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
+      {/* Animated Header */}
+      <Animated.View style={[
+        styles.header,
+        {
+          opacity: headerOpacity,
+          transform: [{ translateY: headerTranslateY }],
+        },
+      ]}>
         <Text style={styles.headerTitle}>K-Pop Albums</Text>
         <TouchableOpacity>
           <More size={24} color="#4682B4" />
         </TouchableOpacity>
-      </View>
+      </Animated.View>
 
-      {/* Filter Tabs */}
-      <View style={styles.tabContainer}>
+      {/* Animated Tab Bar */}
+      <Animated.View style={[
+        styles.tabContainer,
+        {
+          opacity: tabOpacity,
+          transform: [{ translateY: tabTranslateY }],
+        },
+      ]}>
         <TouchableOpacity
           style={[styles.tab, selectedTab === 'all' && styles.activeTab]}
           onPress={() => setSelectedTab('all')}
@@ -48,26 +136,40 @@ const Album = () => {
         >
           <Text style={[styles.tabText, selectedTab === 'solo' && styles.activeTabText]}>Solo</Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
 
-      {/* Album Grid */}
+      {/* Album Grid with Animation */}
       <ScrollView contentContainerStyle={styles.albumGrid}>
         {filteredAlbums.map((album, index) => (
-          <TouchableOpacity
+          <Animated.View
             key={index}
-            style={styles.albumCard}
-            onPress={() => navigation.navigate('AlbumDetails', { album })}
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{
+              opacity: itemOpacity,
+              transform: [{ scale: itemScale }],
+              width: '48%', // Preserve original width
+              marginBottom: 15, // Preserve original margin
+            }}
           >
-            <Image source={{ uri: album.cover }} style={styles.albumCover} />
-            <Text style={styles.albumTitle} numberOfLines={1}>{album.title}</Text>
-            <Text style={styles.albumArtist} numberOfLines={1}>{album.artist}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.albumCard}
+              onPress={() => navigation.navigate('AlbumDetails', { album })}
+            >
+              <Image
+                source={{ uri: album.cover }}
+                style={styles.albumCover} // Original cover style preserved
+              />
+              <Text style={styles.albumTitle} numberOfLines={1}>{album.title}</Text>
+              <Text style={styles.albumArtist} numberOfLines={1}>{album.artist}</Text>
+            </TouchableOpacity>
+          </Animated.View>
         ))}
       </ScrollView>
     </View>
   );
 };
 
+// Keep all original styles exactly the same
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -116,8 +218,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   albumCard: {
-    width: '48%',
-    marginBottom: 15,
+    width: '100%',
     borderRadius: 8,
     overflow: 'hidden',
   },

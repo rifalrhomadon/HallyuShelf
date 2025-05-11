@@ -1,8 +1,8 @@
 const newReleases = [
     {
-      title: 'Hearts2Hearts - The Chase',
+      title: 'Meovv - Hands Up',
       year: '2025',
-      image: 'https://i.scdn.co/image/ab67616d0000b273d346fc1102eb417305b5358b',
+      image: 'http://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV7WTK8n-5j-7i64so3AY2j5QaEa2Gnckdlg&s',
     },
     {
       title: 'Jennie - Ruby',
