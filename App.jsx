@@ -2,9 +2,11 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Home, Album, Playlist, Profile } from './src/screens';
+import { Home, Album, Playlist, Forum, Profile } from './src/screens';
 import AlbumDetails from './src/screens/AlbumDetails';
-import { Home as HomeIcon, Music, Play, User } from 'iconsax-react-native';
+import AddAlbumForm from './src/screens/AddAlbumForm';
+import EditAlbumForm from './src/screens/EditAlbumForm';
+import { Home as HomeIcon, Music, Play, Message2, User } from 'iconsax-react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -53,6 +55,16 @@ function MainTabs() {
         }}
       />
       <Tab.Screen
+        name="Forum" // Tambahkan tab Forum
+        component={Forum}
+        options={{
+          tabBarLabel: 'Forum',
+          tabBarIcon: ({ color, size }) => (
+            <Message2 size={size} color={color} variant="Bold" />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
@@ -84,7 +96,13 @@ export default function App() {
           headerShown: false, // Sembunyikan header default
         }}
         />
-      </Stack.Navigator>
+        <Stack.Screen 
+          name="AddAlbumForm" 
+          component={AddAlbumForm} />
+        <Stack.Screen 
+          name="EditAlbumForm" 
+          component={EditAlbumForm} />
+        </Stack.Navigator>
     </NavigationContainer>
   );
 }

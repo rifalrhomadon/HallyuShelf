@@ -1,17 +1,16 @@
-import React from 'react';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Album, Playlist, Profile } from '../screens';
-import { Home as HomeIcon, Music, Play, User } from 'iconsax-react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Home, Album, Playlist, Profile, Forum } from '../screens';
+import AlbumDetails from '../screens/AlbumDetails';
+import { Home as HomeIcon, Music, Play, Message2, User } from 'iconsax-react-native';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-// Define icon components outside the render
-const HomeTabIcon = ({ color, size }) => <HomeIcon size={size} color={color} variant="Bold" />;
-const AlbumTabIcon = ({ color, size }) => <Music size={size} color={color} variant="Bold" />;
-const PlaylistTabIcon = ({ color, size }) => <Play size={size} color={color} variant="Bold" />;
-const ProfileTabIcon = ({ color, size }) => <User size={size} color={color} variant="Bold" />;
-
-const NavigationBar = () => {
+// Komponen untuk Tab Navigator
+function MainTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -20,15 +19,7 @@ const NavigationBar = () => {
         tabBarStyle: {
           paddingBottom: 5,
           height: 60,
-          backgroundColor: '#ffffff',
-          borderTopWidth: 1,
-          borderTopColor: '#f0f0f0',
         },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          marginBottom: 5,
-        },
-        headerShown: false,
       }}
     >
       <Tab.Screen
@@ -36,15 +27,19 @@ const NavigationBar = () => {
         component={Home}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: HomeTabIcon,
+          tabBarIcon: ({color, size}) => (
+            <HomeIcon size={size} color={color} variant="Bold" />
+          ),
         }}
       />
       <Tab.Screen
         name="Album"
         component={Album}
         options={{
-          tabBarLabel: 'Albums',
-          tabBarIcon: AlbumTabIcon,
+          tabBarLabel: 'Album',
+          tabBarIcon: ({ color, size }) => (
+            <Music size={size} color={color} variant="Bold" />
+          ),
         }}
       />
       <Tab.Screen
@@ -52,7 +47,19 @@ const NavigationBar = () => {
         component={Playlist}
         options={{
           tabBarLabel: 'Playlist',
-          tabBarIcon: PlaylistTabIcon,
+          tabBarIcon: ({ color, size }) => (
+            <Play size={size} color={color} variant="Bold" />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Forum" // Tambahkan tab Forum
+        component={Forum}
+        options={{
+          tabBarLabel: 'Forum',
+          tabBarIcon: ({ color, size }) => (
+            <Message2 size={size} color={color} variant="Bold" />
+          ),
         }}
       />
       <Tab.Screen
@@ -60,11 +67,34 @@ const NavigationBar = () => {
         component={Profile}
         options={{
           tabBarLabel: 'Profile',
-          tabBarIcon: ProfileTabIcon,
+          tabBarIcon: ({ color, size }) => (
+            <User size={size} color={color} variant="Bold" />
+          ),
         }}
       />
     </Tab.Navigator>
   );
-};
+}
 
-export default NavigationBar;
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        {/* Main tabs */}
+        <Stack.Screen
+          name="Main"
+          component={MainTabs}
+          options={{ headerShown: false }}
+        />
+        {/* Screens yang tidak memiliki tabs */}
+        <Stack.Screen
+          name="AlbumDetails"
+          component={AlbumDetails}
+          options={{
+          headerShown: false, // Sembunyikan header default
+        }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

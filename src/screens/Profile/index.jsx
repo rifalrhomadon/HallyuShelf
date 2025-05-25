@@ -1,17 +1,15 @@
-import React from 'react';
-import { ScrollView, StyleSheet, Text, View, Image, Pressable } from 'react-native';
-import { Edit, Setting, Play } from 'iconsax-react-native';
-import { userProfile } from '../../data.jsx';
+import { Edit, Play, Setting, Add } from "iconsax-react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { userProfile } from "../../data.jsx";
+import { useNavigation } from '@react-navigation/native';
 
 const Profile = () => {
+  const navigation = useNavigation();
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Profile Header */}
       <View style={styles.profileHeader}>
-        <Image
-          source={{ uri: userProfile.profileImage }}
-          style={styles.profileImage}
-        />
+        <Image source={{ uri: userProfile.profileImage }} style={styles.profileImage} />
         <View style={styles.profileInfo}>
           <Text style={styles.profileName}>{userProfile.name}</Text>
           <Text style={styles.profileEmail}>{userProfile.email}</Text>
@@ -47,7 +45,7 @@ const Profile = () => {
           </Pressable>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.artistsContainer}>
-          {userProfile.favoriteArtists.map(artist => (
+          {userProfile.favoriteArtists.map((artist) => (
             <View key={artist.id} style={styles.artistCard}>
               <Image source={{ uri: artist.image }} style={styles.artistImage} />
               <Text style={styles.artistName}>{artist.name}</Text>
@@ -64,7 +62,7 @@ const Profile = () => {
             <Text style={styles.seeAll}>See All</Text>
           </Pressable>
         </View>
-        {userProfile.recentPlays.map(song => (
+        {userProfile.recentPlays.map((song) => (
           <Pressable key={song.id} style={styles.recentItem}>
             <Image source={{ uri: song.albumCover }} style={styles.recentImage} />
             <View style={styles.recentInfo}>
@@ -86,6 +84,13 @@ const Profile = () => {
         <Setting size={24} color="#4682B4" />
         <Text style={styles.settingsText}>Settings</Text>
       </Pressable>
+      <TouchableOpacity 
+        style={styles.addAlbumButton}
+        onPress={() => navigation.navigate('AddAlbumForm')}
+      >
+        <Add size={20} color="#4682B4" />
+        <Text style={styles.addAlbumButtonText}>Add Album</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -94,12 +99,12 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     paddingHorizontal: 20,
   },
   profileHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 20,
     marginBottom: 30,
   },
@@ -114,63 +119,63 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 22,
-    fontWeight: 'bold',
-    color: '#1A1A2E',
+    fontWeight: "bold",
+    color: "#1A1A2E",
     marginBottom: 4,
   },
   profileEmail: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginBottom: 4,
   },
   profileJoinDate: {
     fontSize: 12,
-    color: '#888',
+    color: "#888",
   },
   editButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#f0f8ff',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#f0f8ff",
+    justifyContent: "center",
+    alignItems: "center",
   },
   statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 30,
     paddingHorizontal: 20,
   },
   statItem: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   statNumber: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#4682B4',
+    fontWeight: "bold",
+    color: "#4682B4",
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   section: {
     marginBottom: 25,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4682B4',
+    fontWeight: "bold",
+    color: "#4682B4",
   },
   seeAll: {
     fontSize: 14,
-    color: '#4682B4',
+    color: "#4682B4",
   },
   artistsContainer: {
     paddingRight: 20,
@@ -178,7 +183,7 @@ const styles = StyleSheet.create({
   artistCard: {
     width: 100,
     marginRight: 15,
-    alignItems: 'center',
+    alignItems: "center",
   },
   artistImage: {
     width: 100,
@@ -188,15 +193,15 @@ const styles = StyleSheet.create({
   },
   artistName: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#1A1A2E',
-    textAlign: 'center',
+    fontWeight: "500",
+    color: "#1A1A2E",
+    textAlign: "center",
   },
   recentItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 15,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
     borderRadius: 10,
     padding: 10,
   },
@@ -211,45 +216,59 @@ const styles = StyleSheet.create({
   },
   recentTitle: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#1A1A2E',
+    fontWeight: "500",
+    color: "#1A1A2E",
     marginBottom: 4,
   },
   recentArtist: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   recentMeta: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   recentTime: {
     fontSize: 12,
-    color: '#888',
+    color: "#888",
     marginBottom: 5,
   },
   recentPlayButton: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#f0f8ff',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#f0f8ff",
+    justifyContent: "center",
+    alignItems: "center",
   },
   settingsButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 15,
-    backgroundColor: '#f0f8ff',
+    backgroundColor: "#f0f8ff",
     borderRadius: 10,
     marginVertical: 20,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   settingsText: {
     fontSize: 16,
-    color: '#4682B4',
-    fontWeight: '500',
+    color: "#4682B4",
+    fontWeight: "500",
     marginLeft: 10,
   },
+  addAlbumButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15,
+    backgroundColor: '#f0f8ff',
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  addAlbumButtonText: {
+    marginLeft: 10,
+    color: '#4682B4',
+    fontWeight: '500',
+},
 });
 
 export default Profile;

@@ -272,6 +272,19 @@ const playlistData = [
       ],
       description: 'Neo Zone is the second Korean-language studio album by South Korean boy group NCT 127, the Seoul-based sub-unit of the South Korean boy group NCT. It was released on March 6, 2020, by SM Entertainment.',
     },
+    {
+    id: '7',
+      title: 'Love Language',
+      artist: 'TXT',
+      cover: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7wHSnRskD3vjyssSgmTEH_x48G1CPbW9gig&s',
+      releaseDate: 'May 02, 2025',
+      type: 'boy-group',
+      isLiked: false,
+      songs: [
+        { title: 'Love Language', duration: '3:53' },
+      ],
+      description: 'TXT "Love Language" is a digital single that explores the concept of understanding and expressing love in various ways.',
+    },
   ];
 
 const userProfile = {
@@ -331,4 +344,70 @@ const userProfile = {
   ],
 };
 
-export { newReleases, recommendedAlbums, playlistData, kpopAlbums, userProfile };
+const forumData = {
+  trending: [
+    {
+      id: '1',
+      title: 'NewJeans "Get Up" Album Discussion',
+      content: 'What do you think about the new NewJeans mini album? My favorite track is "ETA"!',
+      author: 'BunnyLover99',
+      timestamp: '2 hours ago',
+      likes: 245,
+      comments: 89,
+      category: 'Album',
+      image: 'https://i.scdn.co/image/ab67616d0000b2739d28fd01859073a3ae6ea209',
+    },
+    {
+      id: '2',
+      title: 'BTS Jungkook "Seven" Solo Comeback',
+      content: 'Jungkook finally dropped his solo! The choreography is insane!',
+      author: 'ARMY4Life',
+      timestamp: '5 hours ago',
+      likes: 189,
+      comments: 67,
+      category: 'Comeback',
+      image: 'https://i.scdn.co/image/ab67616d0000b273a991995542d50a691b9ae5be',
+    },
+  ],
+  albums: [
+    {
+      id: '3',
+      title: 'IVE "I\'ve IVE" Full Album Thoughts',
+      content: 'This might be their best work yet. "I AM" is such a powerful title track!',
+      author: 'DIVEforever',
+      timestamp: '1 day ago',
+      likes: 132,
+      comments: 45,
+      category: 'Album',
+      image: 'https://i.scdn.co/image/ab67616d0000b2731820e7a0ab43a1006fdfd8e2',
+    },
+  ],
+  comebacks: [
+    {
+      id: '4',
+      title: 'TWICE "Ready To Be" World Tour Setlist Predictions',
+      content: 'What songs do you think they\'ll perform? Hoping for more Japanese tracks!',
+      author: 'ONCEinMelody',
+      timestamp: '3 days ago',
+      likes: 321,
+      comments: 112,
+      category: 'Comeback',
+      image: 'https://i.scdn.co/image/ab67616d0000b27325ef3cec1eceef8259a732e7',
+    },
+  ],
+  favorites: [
+    {
+      id: '5',
+      title: 'Why BLACKPINK Lisa is the best dancer in K-pop',
+      content: 'Her stage presence and precision is unmatched. That Coachella performance was legendary!',
+      author: 'LALISAmancer',
+      timestamp: '1 week ago',
+      likes: 412,
+      comments: 156,
+      category: 'Favorite',
+      image: 'https://i.scdn.co/image/ab6761610000e5eb8ae7f2aaa9817a704a87ea36',
+    },
+  ],
+};
+
+export { newReleases, recommendedAlbums, playlistData, kpopAlbums, userProfile, forumData };
