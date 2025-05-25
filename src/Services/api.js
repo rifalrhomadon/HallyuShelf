@@ -1,54 +1,58 @@
-// src/services/api.js
-const API_BASE_URL = 'https://682992156075e87073a6d905.mockapi.io/api/albums'; // Replace with your mockapi.io URL
+import { db } from './firebase';
 
-export const fetchAlbums = async () => {
-  const response = await fetch(`${API_BASE_URL}/albums`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch albums');
-  }
-  return await response.json();
-};
-
-export const createAlbum = async (albumData) => {
+// Fungsi untuk mendapatkan semua album
+export const getAlbums = async () => {
   try {
-    console.log("Sending albumData:", albumData); // 👈 Log the data being sent
-    const response = await fetch(`${API_BASE_URL}/albums`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(albumData)
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Error response:", errorData);
-      throw new Error(errorData.message || "Failed to create album");
-    }
-    return await response.json();
+    const snapshot = await db.collection('albums').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
-    console.error("Full error:", error);
+    console.error('Error getting albums:', error);
     throw error;
   }
 };
 
-export const updateAlbum = async (id, albumData) => {
-  const response = await fetch(`${API_BASE_URL}/albums/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(albumData),
-  });
-  if (!response.ok) {
-    throw new Error('Failed to update album');
+// Fungsi untuk membuat album baru
+export const createAlbum = async (albumData) => {
+  try {
+    const docRef = await db.collection('albums').add(albumData);
+    return { id: docRef.id, ...albumData };
+  } catch (error) {
+    console.error('Error creating album:', error);
+    throw error;
   }
-  return await response.json();
 };
 
-export const deleteAlbum = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/albums/${id}`, {
-    method: 'DELETE',
-  });
-  if (!response.ok) {
-    throw new Error('Failed to delete album');
+// Fungsi untuk memperbarui album
+export const updateAlbum = async (id, albumData) => {
+  try {
+    await db.collection('albums').doc(id).update(albumData);
+    return { id, ...albumData };
+  } catch (error) {
+    console.error('Error updating album:', error);
+    throw error;
   }
-  return await response.json();
+};
+
+// Fungsi untuk menghapus album
+export const deleteAlbum = async (id) => {
+  try {
+    await db.collection('albums').doc(id).delete();
+  } catch (error) {
+    console.error('Error deleting album:', error);
+    throw error;
+  }
+};
+
+// Fungsi untuk mendapatkan album berdasarkan ID
+export const getAlbumById = async (id) => {
+  try {
+    const doc = await db.collection('albums').doc(id).get();
+    if (doc.exists) {
+      return { id: doc.id, ...doc.data() };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting album:', error);
+    throw error;
+  }
 };

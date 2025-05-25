@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Animated, Easing } from 'react-native';
 import { More } from 'iconsax-react-native';
 import { useNavigation } from '@react-navigation/native';
-import { kpopAlbums } from '../../data';
+import { getAlbums } from '../../Services/api';
 
 const Album = () => {
   const navigation = useNavigation();
   const [selectedTab, setSelectedTab] = useState('all');
+  const [albums, setAlbums] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Animation values
   const headerOpacity = useRef(new Animated.Value(0)).current;
@@ -16,9 +18,26 @@ const Album = () => {
   const itemOpacity = useRef(new Animated.Value(0)).current;
   const itemScale = useRef(new Animated.Value(0.9)).current;
 
+  // Fetch albums from Firebase
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      try {
+        setLoading(true);
+        const albumsData = await getAlbums();
+        setAlbums(albumsData);
+      } catch (error) {
+        console.error('Error fetching albums:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAlbums();
+  }, []);
+
   const filteredAlbums = selectedTab === 'all'
-    ? kpopAlbums
-    : kpopAlbums.filter(album => album.type === selectedTab);
+    ? albums
+    : albums.filter(album => album.type === selectedTab);
 
   // Initialize animations
   useEffect(() => {
@@ -88,6 +107,14 @@ const Album = () => {
     ]).start();
   }, [itemOpacity, itemScale, selectedTab]);
 
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading albums...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       {/* Animated Header */}
@@ -99,7 +126,7 @@ const Album = () => {
         },
       ]}>
         <Text style={styles.headerTitle}>K-Pop Albums</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('AddAlbumForm')}>
           <More size={24} color="#4682B4" />
         </TouchableOpacity>
       </Animated.View>
@@ -142,13 +169,12 @@ const Album = () => {
       <ScrollView contentContainerStyle={styles.albumGrid}>
         {filteredAlbums.map((album, index) => (
           <Animated.View
-            key={index}
-            // eslint-disable-next-line react-native/no-inline-styles
+            key={album.id}
             style={{
               opacity: itemOpacity,
               transform: [{ scale: itemScale }],
-              width: '48%', // Preserve original width
-              marginBottom: 15, // Preserve original margin
+              width: '48%',
+              marginBottom: 15,
             }}
           >
             <TouchableOpacity
@@ -157,7 +183,7 @@ const Album = () => {
             >
               <Image
                 source={{ uri: album.cover }}
-                style={styles.albumCover} // Original cover style preserved
+                style={styles.albumCover}
               />
               <Text style={styles.albumTitle} numberOfLines={1}>{album.title}</Text>
               <Text style={styles.albumArtist} numberOfLines={1}>{album.artist}</Text>
@@ -169,7 +195,6 @@ const Album = () => {
   );
 };
 
-// Keep all original styles exactly the same
 const styles = StyleSheet.create({
   container: {
     flex: 1,
