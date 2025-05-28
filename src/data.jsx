@@ -1,138 +1,264 @@
-export const CategoryList = [
+const newReleases = [
     {
-      id: 1,
-      categoryName: 'All Levels',
+      title: 'Hearts2Hearts - The Chase',
+      year: '2025',
+      image: 'https://i.scdn.co/image/ab67616d0000b273d346fc1102eb417305b5358b',
     },
     {
-      id: 2,
-      categoryName: 'Beginner',
+      title: 'Jennie - Ruby',
+      year: '2025',
+      image: 'https://koreanindo.net/wp-content/uploads/2025/02/ruby-1-.jpeg',
     },
     {
-      id: 3,
-      categoryName: 'Intermediate',
+      title: 'Jisoo - Amortage',
+      year: '2025',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsZbdL0gkNo5fEluWd0qDB5Rsy89x3a4Zo-w&s',
     },
     {
-      id: 4,
-      categoryName: 'Advanced',
+      title: 'Baby Monster - Drip',
+      year: '2024',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9f8aaI-Puk0Tadp723Bl0L7nc585ajYQYgQ&s',
     },
     {
-      id: 5,
-      categoryName: 'Kids',
-    },
-    {
-      id: 6,
-      categoryName: 'Adults',
-    },
-  ];
-
-  export const BlogList = [
-    {
-      id: 1,
-      title: 'Mastering Freestyle in 7 Days',
-      category: 'Beginner',
-      image:
-        'https://media.istockphoto.com/id/1285601582/id/foto/sudut-pandang-drone-tepat-di-atas-instruktur-pelatih-kolam-renang-mengajarkan-keterampilan.jpg?s=1024x1024&w=is&k=20&c=B0fs25K8063-roKiIYzp7fA1oAeUEIYg7tPkUOLnpNQ=',
-      createdAt: 'Apr 10, 2025',
-      totalComments: 42,
-    },
-    {
-      id: 2,
-      title: 'Backstroke Basics for Kids',
-      category: 'Kids',
-      image:
-        'https://media.istockphoto.com/id/2157947809/id/foto/asian-family-lifestyle-and-play-together-in-the-swimmingpool-on-summer-holiday-dad-and-kid.jpg?s=1024x1024&w=is&k=20&c=bzde4tvk4uQON4Khbltqm3htYNh5MODKBpuAon8BSZw=',
-      createdAt: 'Apr 11, 2025',
-      totalComments: 12,
-    },
-    {
-      id: 3,
-      title: 'Underwater Breathing Techniques',
-      category: 'Intermediate',
-      image:
-        'https://images.unsplash.com/photo-1560090995-01632a28895b?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      createdAt: 'Apr 12, 2025',
-      totalComments: 18,
-    },
-    {
-      id: 4,
-      title: 'Train Like a Pro: Advanced Drills',
-      category: 'Advanced',
-      image:
-        'https://media.istockphoto.com/id/465383082/id/foto/perenang-wanita-di-kolam-renang.jpg?s=1024x1024&w=is&k=20&c=VxN_VvKvLsENzus4bpSLXYMI03YrARDYo-GHJP9ei6I=',
-      createdAt: 'Apr 13, 2025',
-      totalComments: 25,
-    },
-    {
-      id: 5,
-      title: 'Swim Safety Tips Every Parent Should Know',
-      category: 'Kids',
-      image:
-        'https://media.istockphoto.com/id/812784992/id/foto/instruktur-dan-sekelompok-anak-anak-melakukan-latihan-di-dekat-kolam-renang.jpg?s=1024x1024&w=is&k=20&c=2t9MlL7R07hLqKY9HRXHGHi7NsFrm4wZiaEaY9GfOaE=',
-      createdAt: 'Apr 14, 2025',
-      totalComments: 31,
-    },
-    {
-      id: 6,
-      title: 'Adult Swimming: Breaking the Fear',
-      category: 'Adults',
-      image:
-        'https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      createdAt: 'Apr 15, 2025',
-      totalComments: 17,
+      title: 'Atezz - Golden Hour',
+      year: '2024',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQke7-_17kYJl06tz5SlUiuz4TfZfkJINY3w&s',
     },
   ];
 
-  export const ProfileData = {
-    profilePict:
-      'https://plus.unsplash.com/premium_photo-1701030722601-123699cdb1ef?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    name: 'Azka Garendra', // Nama pengguna bisa disesuaikan
-    createdAt: '9 Maret, 2025', // Tanggal bergabung yang lebih sesuai
-    blogPosted: 15, // Jumlah blog yang diposting bisa lebih relevan
-    following: 250, // Pengguna yang diikuti
-    follower: 1200, // Jumlah pengikut yang lebih relevan untuk SwimAcademy
+  const recommendedAlbums = [
+    {
+      title: 'Aespa - Whiplash',
+      year: '2025',
+      image: 'https://i.scdn.co/image/ab67616d0000b2736eb604294f8f58c9078f58b1',
+    },
+    {
+      title: 'Riize - Talk Saxy',
+      year: '2024',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5nelJzcBbhRrlQ8Q_6mH34LXnV2qcfCN_Rw&s',
+    },
+    {
+      title: 'NMIXX - Love Me Like This',
+      year: '2024',
+      image: 'https://i.scdn.co/image/ab67616d00001e024b32002f8a5e4ee2a5db5ace',
+    },
+    {
+      title: 'Enhypen - Romance Untold Daydream',
+      year: '2024',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIJPu6Ki2Gmu0qlnOBXyqN6emcbwxPSYVRmA&s',
+    },
+    {
+      title: 'Riize - Rizing',
+      year: '2024',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6M_hNQBNrzPOleuSwE5SftGBVtfC3Yr8pEw&s',
+    },
+  ];
+const playlistData = [
+    {
+      id: '1',
+      name: 'BTS Essentials',
+      coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwNyHq1YiJXe6p_a_xAjlTUtAUFXXpPpRppA&s',
+      duration: '2h 45m',
+      songs: [
+        {
+          id: '101',
+          title: 'Dynamite',
+          artist: 'BTS',
+          coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCAhpBkR-Czi28WJ-k3HU_s3OXAm8IqoNK0A&s',
+          year: '2020',
+        },
+        {
+          id: '102',
+          title: 'Butter',
+          artist: 'BTS',
+          coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1PlHlCHG_McGGS9OYp9cn6qwduLj-1Y_1_A&s',
+          year: '2021',
+        },
+        {
+          id: '103',
+          title: 'Boy With Luv',
+          artist: 'BTS ft. Halsey',
+          coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJZDJAj6sw_TpijhCScoSgyGOyhLnElxHHnw&s',
+          year: '2019',
+        },
+      ],
+    },
+    {
+      id: '2',
+      name: 'BLACKPINK Hits',
+      coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTM8l26_LYOxUQbNUOuk55GmXSbx8w_xbkLg&s',
+      duration: '1h 30m',
+      songs: [
+        {
+          id: '201',
+          title: 'DDU-DU DDU-DU',
+          artist: 'BLACKPINK',
+          coverImage: 'https://upload.wikimedia.org/wikipedia/id/2/26/Black_Pink_-_Square_Up_artwork.png',
+          year: '2018',
+        },
+        {
+          id: '202',
+          title: 'How You Like That',
+          artist: 'BLACKPINK',
+          coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxHfD4FAC9hDJ1wcVZsznV1ntQsqpCeV07Pw&s',
+          year: '2020',
+        },
+      ],
+    },
+    {
+      id: '3',
+      name: 'Chill K-pop Vibes',
+      coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGXfJTqXzlnX88hXjd7qdttCz1uTSnZRzmdA&s',
+      duration: '3h 15m',
+      songs: [
+        {
+          id: '301',
+          title: 'Psycho',
+          artist: 'Red Velvet',
+          coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH7WGOuNz7D3AE6FO1x75lXBHIH2Bh7IrOVA&s',
+          year: '2019',
+        },
+        {
+          id: '302',
+          title: 'Love Scenario',
+          artist: 'iKON',
+          coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj_up5vVClgGa-swX2Ro7LSHjbK4SaAv38Jw&s',
+          year: '2018',
+        },
+        {
+          id: '303',
+          title: 'Feel Special',
+          artist: 'TWICE',
+          coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTb14_nwD2Nanmmix4P2SOQZ_ki9fXp4v36fA&s',
+          year: '2019',
+        },
+      ],
+    },
+    {
+      id: '4',
+      name: 'Aespa Hits',
+      coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjCldL12ymlYHVK-TJHrwhz1FtC_8bmMfn8A&s',
+      duration: '3h 15m',
+      songs: [
+        {
+          id: '401',
+          title: 'Whiplash',
+          artist: 'Aespa',
+          coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUiJJ4N_Wk4NJsqIWOfe2a7XqDvr_QJL4NZA&s',
+          year: '2024',
+        },
+        {
+          id: '402',
+          title: 'Armageddon',
+          artist: 'Aespa',
+          coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJEH9bSBapdkSdyxn-YaKawEYSAnzINhcAuQ&s',
+          year: '2024',
+        },
+        {
+          id: '403',
+          title: 'Drama',
+          artist: 'Aespa',
+          coverImage: 'https://i.scdn.co/image/ab67616d0000b273c54e39f2ae0dd10731f93c08',
+          year: '2023',
+        },
+      ],
+    },
+  ];
+
+  const albumDetails = {
+    id: '101',
+    title: 'Whiplash',
+    artist: 'Aespa',
+    coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUiJJ4N_Wk4NJsqIWOfe2a7XqDvr_QJL4NZA&s',
+    year: '2024',
+    genre: 'K-pop, Dance-pop, Drama',
+    label: 'SM Entertainment',
+    totalTracks: 4,
+    duration: '11:53',
+    songs: [
+      { id: '1', title: 'Whiplash', duration: '3:04', plays: '1.2B' },
+      { id: '2', title: 'Kill it', duration: '3:20', plays: '450M' },
+      { id: '3', title: 'Flight, Not Feelings', duration: '3:02', plays: '780M' },
+      { id: '4', title: 'Pink Hoodie', duration: '2:27', plays: '650M' },
+    ],
+    description: '"The music video for the title track "Whiplash" features futuristic visuals and advanced CGI effects.',
+    similarAlbums: [
+      {
+        id: '201',
+        title: 'The Chase',
+        artist: 'Hearts2Hearts',
+        coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWxaaGTi_DBUg8DasGKR4nMr9d0-_rHKoj6A&s',
+      },
+      {
+        id: '202',
+        title: 'Drip',
+        artist: 'Baby Monster',
+        coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn8wiVXC57z1FdgJO_scGViZWZBkRKTW6Djw&s',
+      },
+      {
+        id: '203',
+        title: 'Hot Sauce',
+        artist: 'NCT Dream',
+        coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8CfOZweL1gS2LehJBybYwC2LvBcZsTfO2yg&s',
+      },
+    ],
   };
 
-  export const trainingSchedule = [
+const userProfile = {
+  name: 'PeachFall',
+  email: 'peachfall@example.com',
+  joinDate: 'Joined Oktober 2016',
+  profileImage: 'https://st3.depositphotos.com/5045705/34715/v/1600/depositphotos_347157306-stock-illustration-cute-cartoon-peach-kawaii-face.jpg',
+  stats: {
+    albums: 142,
+    playlists: 18,
+    following: 50000,
+  },
+  favoriteArtists: [
     {
-      id: 1,
-      title: 'Basic Swimming Technique',
-      coach: 'Coach Andi',
-      date: 'Senin, 15 Mei 2023',
-      time: '08:00 - 10:00 WIB',
-      location: 'Kolam Renang A, Jakarta',
-      level: 'Pemula',
-      image: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
-      booked: true,
+      id: '1',
+      name: 'BTS',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwNyHq1YiJXe6p_a_xAjlTUtAUFXXpPpRppA&s',
     },
     {
-      id: 2,
-      title: 'Advanced Freestyle',
-      coach: 'Coach Rina',
-      date: 'Rabu, 17 Mei 2023',
-      time: '16:00 - 18:00 WIB',
-      location: 'Kolam Renang B, Jakarta',
-      level: 'Lanjutan',
-      image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
-      booked: true,
+      id: '2',
+      name: 'BLACKPINK',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTM8l26_LYOxUQbNUOuk55GmXSbx8w_xbkLg&s',
     },
     {
-      id: 3,
-      title: 'Butterfly Stroke Mastery',
-      coach: 'Coach Budi',
-      date: 'Jumat, 19 Mei 2023',
-      time: '10:00 - 12:00 WIB',
-      location: 'Kolam Renang C, Jakarta',
-      level: 'Expert',
-      image: 'https://images.unsplash.com/photo-1600965962102-9d260a2a0a2a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
-      booked: true,
+      id: '3',
+      name: 'EXO',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3FdExwaOn2hoVKqFsOToUw2xkq-_wmsPc6A&s',
     },
-  ];
+    {
+      id: '4',
+      name: 'Aespa',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjCldL12ymlYHVK-TJHrwhz1FtC_8bmMfn8A&s',
+    },
+  ],
+  recentPlays: [
+    {
+      id: '1',
+      title: 'The Chase',
+      artist: 'Hearts2Hearts',
+      albumCover: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWxaaGTi_DBUg8DasGKR4nMr9d0-_rHKoj6A&s',
+      time: '2 hours ago',
+    },
+    {
+      id: '2',
+      title: 'Born Again',
+      artist: 'Lisa Feat Doja Cat & Raye',
+      albumCover: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStrNDAu37W03wdIHZn-MABsYmuc3exEsoTww&s',
+      time: '5 hours ago',
+    },
+    {
+      id: '3',
+      title: 'Like Jennie',
+      artist: 'Jennie',
+      albumCover: 'https://i.scdn.co/image/ab67616d0000b2735a43918ea90bf1e44b7bdcfd',
+      time: '1 day ago',
+    },
+  ],
+};
 
-  export const categories = [
-    { id: 1, name: 'Semua' },
-    { id: 2, name: 'Pemula' },
-    { id: 3, name: 'Lanjutan' },
-    { id: 4, name: 'Anak-anak' },
-    { id: 5, name: 'Dewasa' },
-    { id: 6, name: 'Kompetitif' },
-  ];
+export { newReleases, recommendedAlbums, playlistData, albumDetails, userProfile };

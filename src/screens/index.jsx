@@ -1,5 +1,7 @@
 import Home from './Home';
-import Discover from './Discover';
-import Bookmark from './Bookmark';
+import Album from './Album';
+import AlbumDetails from './AlbumDetails';
+import Playlist from './Playlist';
+import Forum from './Forum';
 import Profile from './Profile';
-export {Home, Discover, Bookmark, Profile};
+export {Home, Album, AlbumDetails, Playlist, Forum, Profile};

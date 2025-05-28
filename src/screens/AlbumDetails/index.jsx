@@ -1,26 +1,21 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Easing } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Easing, Alert } from 'react-native';
 import { ArrowLeft, Heart, More, Play } from 'iconsax-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useAlbums } from '../../contexts/AlbumContext';
 
 const AlbumDetails = () => {
   const navigation = useNavigation();
   const { params: { album } } = useRoute();
+  const { deleteAlbum, toggleLike } = useAlbums();
 
-  // Animasi untuk header
   const headerTranslateY = useRef(new Animated.Value(-50)).current;
   const headerOpacity = useRef(new Animated.Value(0)).current;
-
-  // Animasi untuk konten album
   const coverScale = useRef(new Animated.Value(0.8)).current;
   const infoOpacity = useRef(new Animated.Value(0)).current;
   const infoTranslateX = useRef(new Animated.Value(30)).current;
-
-  // Animasi untuk daftar lagu
   const trackOpacity = useRef(new Animated.Value(0)).current;
   const trackTranslateY = useRef(new Animated.Value(20)).current;
-
-  // Animasi untuk deskripsi
   const descOpacity = useRef(new Animated.Value(0)).current;
   const descTranslateY = useRef(new Animated.Value(20)).current;
 
@@ -96,6 +91,24 @@ const AlbumDetails = () => {
     ]).start();
   }, [coverScale, descOpacity, descTranslateY, headerOpacity, headerTranslateY, infoOpacity, infoTranslateX, trackOpacity, trackTranslateY]);
 
+  const handleDeleteAlbum = async () => {
+    try {
+      await deleteAlbum(album.id);
+      navigation.goBack();
+    } catch (error) {
+      console.error('Failed to delete album:', error);
+      alert('Failed to delete album. Please try again.');
+    }
+  };
+
+  const handleEditAlbum = () => {
+    navigation.navigate('EditAlbumForm', { album });
+  };
+
+  const handleToggleLike = () => {
+    toggleLike(album.id);
+  };
+
   // Render item lagu dengan animasi stagger
   const renderTrackItem = (song, index) => {
     const itemOpacity = trackOpacity.interpolate({
@@ -132,7 +145,6 @@ const AlbumDetails = () => {
 
   return (
     <View style={styles.container}>
-      {/* Animated Header */}
       <Animated.View style={[
         styles.header,
         {
@@ -144,13 +156,38 @@ const AlbumDetails = () => {
           <ArrowLeft size={24} color="#4682B4" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Album Details</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          Alert.alert(
+            'Album Options',
+            'Choose an action',
+            [
+              {
+                text: 'Edit Album',
+                onPress: handleEditAlbum,
+              },
+              {
+                text: 'Delete Album',
+                onPress: () => {
+                  Alert.alert(
+                    'Confirm Delete',
+                    'Are you sure you want to delete this album?',
+                    [
+                      { text: 'Cancel', style: 'cancel' },
+                      { text: 'Delete', onPress: handleDeleteAlbum, style: 'destructive' },
+                    ]
+                  );
+                },
+                style: 'destructive',
+              },
+              { text: 'Cancel', style: 'cancel' },
+            ]
+          );
+        }}>
           <More size={24} color="#4682B4" />
         </TouchableOpacity>
       </Animated.View>
 
       <ScrollView>
-        {/* Album Cover and Basic Info */}
         <View style={styles.albumHeader}>
           <Animated.Image
             source={{ uri: album.cover }}
@@ -178,14 +215,13 @@ const AlbumDetails = () => {
                 <Play size={20} color="#fff" />
                 <Text style={styles.playButtonText}>Play</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.likeButton}>
+              <TouchableOpacity style={styles.likeButton} onPress={handleToggleLike}>
                 <Heart size={20} color="#4682B4" variant={album.isLiked ? 'Bold' : 'Linear'} />
               </TouchableOpacity>
             </View>
           </Animated.View>
         </View>
 
-        {/* Track List */}
         <Animated.View
           style={[
             styles.trackList,
@@ -199,7 +235,6 @@ const AlbumDetails = () => {
           {album.songs.map(renderTrackItem)}
         </Animated.View>
 
-        {/* Album Description */}
         <Animated.View
           style={[
             styles.description,

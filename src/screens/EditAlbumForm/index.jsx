@@ -3,11 +3,13 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView 
 import { ArrowLeft, Save, Trash } from 'iconsax-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { updateAlbum, deleteAlbum } from '../../Services/api';
+import { useAlbums } from '../../contexts/AlbumContext';
+import Toast from 'react-native-toast-message';
 
 const EditAlbumForm = () => {
   const navigation = useNavigation();
   const { params: { album } } = useRoute();
+  const { updateAlbum, deleteAlbum } = useAlbums();
   const [formData, setFormData] = useState(album);
   const [songs, setSongs] = useState(album.songs);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,25 +56,32 @@ const EditAlbumForm = () => {
 
   const handleSubmit = async () => {
     try {
-      setIsLoading(true);
       const albumData = {
         ...formData,
         songs: songs.filter(song => song.title && song.duration),
       };
       await updateAlbum(album.id, albumData);
+      
+      Toast.show({
+        type: 'success',
+        text1: 'Album updated successfully!',
+        visibilityTime: 2000,
+      });
+      
       navigation.goBack();
     } catch (error) {
-      console.error('Error updating album:', error);
-      alert('Failed to update album. Please try again.');
-    } finally {
-      setIsLoading(false);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to update album',
+        text2: error.message,
+      });
     }
   };
 
   const handleDelete = async () => {
     try {
       setIsLoading(true);
-      await deleteAlbum(album.id);
+      deleteAlbum(album.id);
       navigation.goBack();
     } catch (error) {
       console.error('Error deleting album:', error);

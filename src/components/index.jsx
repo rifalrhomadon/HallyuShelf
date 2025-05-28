@@ -1,4 +1,5 @@
 import ItemSmall from './ItemSmall';
-import ItemBookmark from './ItemBookmark';
+import ItemDetails from './ItemDetails';
 import ListHorizontal from './ListHorizontal';
-export {ItemSmall, ItemBookmark, ListHorizontal};
+
+export {ItemSmall, ItemDetails, ListHorizontal};

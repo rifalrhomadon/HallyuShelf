@@ -1,13 +1,14 @@
-// src/screens/AddAlbumForm.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { ArrowLeft, Add } from 'iconsax-react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { createAlbum } from '../../Services/api';
+import { useAlbums } from '../../contexts/AlbumContext';
+import Toast from 'react-native-toast-message';
 
 const AddAlbumForm = () => {
   const navigation = useNavigation();
+  const { addAlbum } = useAlbums();
   const [formData, setFormData] = useState({
     title: '',
     artist: '',
@@ -20,7 +21,7 @@ const AddAlbumForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (name, value) => {
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSongChange = (index, field, value) => {
@@ -42,31 +43,71 @@ const AddAlbumForm = () => {
   };
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
 
-    if (!result.canceled) {
-      handleChange('cover', result.assets[0].uri);
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        handleChange('cover', result.assets[0].uri);
+      }
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Image Picker Error',
+        text2: error.message,
+      });
     }
   };
 
+  const isValidDate = (dateStr) => {
+    return /^\d{4}-\d{2}-\d{2}$/.test(dateStr);
+  };
+
   const handleSubmit = async () => {
+    if (!formData.title || !formData.artist || !formData.releaseDate) {
+      Toast.show({
+        type: 'error',
+        text1: 'Missing required fields',
+        text2: 'Please fill in title, artist, and release date.',
+      });
+      return;
+    }
+
+    if (!isValidDate(formData.releaseDate)) {
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid Date Format',
+        text2: 'Use format YYYY-MM-DD',
+      });
+      return;
+    }
+
+    setIsLoading(true);
     try {
-      setIsLoading(true);
       const albumData = {
         ...formData,
-        songs: songs.filter(song => song.title && song.duration),
+        songs: songs.filter(song => song.title.trim() && song.duration.trim()),
         isLiked: false,
       };
-      await createAlbum(albumData);
+      await addAlbum(albumData);
+
+      Toast.show({
+        type: 'success',
+        text1: 'Album added successfully!',
+        visibilityTime: 2000,
+      });
+
       navigation.goBack();
     } catch (error) {
-      console.error('Error creating album:', error);
-      alert('Failed to create album. Please try again.');
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to add album',
+        text2: error.message,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +123,6 @@ const AddAlbumForm = () => {
       </View>
 
       <View style={styles.formContainer}>
-        {/* Album Cover */}
         <TouchableOpacity style={styles.coverContainer} onPress={pickImage}>
           {formData.cover ? (
             <Image source={{ uri: formData.cover }} style={styles.coverImage} />
@@ -94,7 +134,6 @@ const AddAlbumForm = () => {
           )}
         </TouchableOpacity>
 
-        {/* Album Info */}
         <TextInput
           style={styles.input}
           placeholder="Album Title"
@@ -122,7 +161,6 @@ const AddAlbumForm = () => {
           onChangeText={(text) => handleChange('description', text)}
         />
 
-        {/* Album Type */}
         <View style={styles.typeContainer}>
           <Text style={styles.typeLabel}>Album Type:</Text>
           <View style={styles.typeOptions}>
@@ -148,7 +186,6 @@ const AddAlbumForm = () => {
           </View>
         </View>
 
-        {/* Songs */}
         <Text style={styles.sectionTitle}>Songs</Text>
         {songs.map((song, index) => (
           <View key={index} style={styles.songContainer}>

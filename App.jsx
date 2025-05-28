@@ -2,16 +2,18 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Home, Bookmark, Discover, Profile } from './src/screens';
-import BookmarkDetail from './src/screens/BookmarkDetail';
-import AddBookmarkForm from './src/screens/AddBookmarkForm';
-import EditBookmarkForm from './src/screens/EditBookmarkForm';
-import { Home as HomeIcon, Archive, SearchNormal, User } from 'iconsax-react-native';
+import { Home, Album, Playlist, Forum, Profile } from './src/screens';
+import AlbumDetails from './src/screens/AlbumDetails';
+import AddAlbumForm from './src/screens/AddAlbumForm';
+import EditAlbumForm from './src/screens/EditAlbumForm';
+import { Home as HomeIcon, Music, Play, Message2, User } from 'iconsax-react-native';
+import { AlbumProvider } from './src/contexts/AlbumContext';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from './src/config/toastConfig';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-// Komponen untuk Tab Navigator
 function MainTabs() {
   return (
     <Tab.Navigator
@@ -29,28 +31,38 @@ function MainTabs() {
         component={Home}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({color, size}) => (
             <HomeIcon size={size} color={color} variant="Bold" />
           ),
         }}
       />
       <Tab.Screen
-        name="Bookmark"
-        component={Bookmark}
+        name="Album"
+        component={Album}
         options={{
-          tabBarLabel: 'Bookmark',
+          tabBarLabel: 'Album',
           tabBarIcon: ({ color, size }) => (
-            <Archive size={size} color={color} variant="Bold" />
+            <Music size={size} color={color} variant="Bold" />
           ),
         }}
       />
       <Tab.Screen
-        name="Discover"
-        component={Discover}
+        name="Playlist"
+        component={Playlist}
         options={{
-          tabBarLabel: 'Discover',
+          tabBarLabel: 'Playlist',
           tabBarIcon: ({ color, size }) => (
-            <SearchNormal size={size} color={color} variant="Bold" />
+            <Play size={size} color={color} variant="Bold" />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Forum"
+        component={Forum}
+        options={{
+          tabBarLabel: 'Forum',
+          tabBarIcon: ({ color, size }) => (
+            <Message2 size={size} color={color} variant="Bold" />
           ),
         }}
       />
@@ -68,30 +80,34 @@ function MainTabs() {
   );
 }
 
-// Komponen Utama App
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Main"
-          component={MainTabs}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="AddBookmarkForm" 
-          component={AddBookmarkForm} 
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="EditBookmarkForm" 
-          component={EditBookmarkForm} 
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Bookmark" component={Bookmark} />
-        <Stack.Screen name="BookmarkDetail" component={BookmarkDetail} />
-        {/* Tambahkan screen lain jika dibutuhkan di sini */}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AlbumProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Main"
+            component={MainTabs}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="AlbumDetails"
+            component={AlbumDetails}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen 
+            name="AddAlbumForm" 
+            component={AddAlbumForm} 
+            options={{ title: 'Add New Album' }}
+          />
+          <Stack.Screen 
+            name="EditAlbumForm" 
+            component={EditAlbumForm} 
+            options={{ title: 'Edit Album' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <Toast config={toastConfig} />
+    </AlbumProvider>
   );
 }
