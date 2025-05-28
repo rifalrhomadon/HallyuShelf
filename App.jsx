@@ -2,11 +2,11 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Home, Album, Playlist, Forum, Profile } from './src/screens';
-import AlbumDetails from './src/screens/AlbumDetails';
-import AddAlbumForm from './src/screens/AddAlbumForm';
-import EditAlbumForm from './src/screens/EditAlbumForm';
-import { Home as HomeIcon, Music, Play, Message2, User } from 'iconsax-react-native';
+import { Home, Bookmark, Discover, Profile } from './src/screens';
+import BookmarkDetail from './src/screens/BookmarkDetail';
+import AddBookmarkForm from './src/screens/AddBookmarkForm';
+import EditBookmarkForm from './src/screens/EditBookmarkForm';
+import { Home as HomeIcon, Archive, SearchNormal, User } from 'iconsax-react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -29,38 +29,28 @@ function MainTabs() {
         component={Home}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({color, size}) => (
+          tabBarIcon: ({ color, size }) => (
             <HomeIcon size={size} color={color} variant="Bold" />
           ),
         }}
       />
       <Tab.Screen
-        name="Album"
-        component={Album}
+        name="Bookmark"
+        component={Bookmark}
         options={{
-          tabBarLabel: 'Album',
+          tabBarLabel: 'Bookmark',
           tabBarIcon: ({ color, size }) => (
-            <Music size={size} color={color} variant="Bold" />
+            <Archive size={size} color={color} variant="Bold" />
           ),
         }}
       />
       <Tab.Screen
-        name="Playlist"
-        component={Playlist}
+        name="Discover"
+        component={Discover}
         options={{
-          tabBarLabel: 'Playlist',
+          tabBarLabel: 'Discover',
           tabBarIcon: ({ color, size }) => (
-            <Play size={size} color={color} variant="Bold" />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Forum" // Tambahkan tab Forum
-        component={Forum}
-        options={{
-          tabBarLabel: 'Forum',
-          tabBarIcon: ({ color, size }) => (
-            <Message2 size={size} color={color} variant="Bold" />
+            <SearchNormal size={size} color={color} variant="Bold" />
           ),
         }}
       />
@@ -78,31 +68,30 @@ function MainTabs() {
   );
 }
 
+// Komponen Utama App
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* Main tabs */}
         <Stack.Screen
           name="Main"
           component={MainTabs}
           options={{ headerShown: false }}
         />
-        {/* Screens yang tidak memiliki tabs */}
-        <Stack.Screen
-          name="AlbumDetails"
-          component={AlbumDetails}
-          options={{
-          headerShown: false, // Sembunyikan header default
-        }}
+        <Stack.Screen 
+          name="AddBookmarkForm" 
+          component={AddBookmarkForm} 
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
-          name="AddAlbumForm" 
-          component={AddAlbumForm} />
-        <Stack.Screen 
-          name="EditAlbumForm" 
-          component={EditAlbumForm} />
-        </Stack.Navigator>
+          name="EditBookmarkForm" 
+          component={EditBookmarkForm} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Bookmark" component={Bookmark} />
+        <Stack.Screen name="BookmarkDetail" component={BookmarkDetail} />
+        {/* Tambahkan screen lain jika dibutuhkan di sini */}
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

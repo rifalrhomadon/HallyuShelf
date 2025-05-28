@@ -5,5 +5,10 @@ const colors = {
     black: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
     darkModeBlack: (opacity = 1) => `rgba(27, 27, 27, ${opacity})`,
     darkModeBlue: (opacity = 1) => `rgba(146, 156, 241, ${opacity})`,
-};
-export default colors;
+
+    // Tambahkan ini
+    blueLight: (opacity = 1) => `rgba(173, 202, 255, ${opacity})`, // Light Blue
+    blueDark: (opacity = 1) => `rgba(25, 46, 99, ${opacity})`,     // Dark Blue
+  };
+
+  export default colors;

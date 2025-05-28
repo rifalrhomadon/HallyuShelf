@@ -1,274 +1,144 @@
-import { Edit, Play, Setting, Add } from "iconsax-react-native";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { userProfile } from "../../data.jsx";
-import { useNavigation } from '@react-navigation/native';
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { Setting2 } from 'iconsax-react-native';
+import React from 'react';
+import { ProfileData, BlogList } from '../../data';
+import { ItemSmall } from '../../components';
+import { fontType, colors } from '../../theme';
+
+const formatNumber = number => {
+  if (number >= 1000000000) {
+    return (number / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+  }
+  if (number >= 1000000) {
+    return (number / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  }
+  if (number >= 1000) {
+    return (number / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+  }
+  return number.toString();
+};
+
+const data = BlogList.slice(5);
 
 const Profile = () => {
-  const navigation = useNavigation();
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Profile Header */}
-      <View style={styles.profileHeader}>
-        <Image source={{ uri: userProfile.profileImage }} style={styles.profileImage} />
-        <View style={styles.profileInfo}>
-          <Text style={styles.profileName}>{userProfile.name}</Text>
-          <Text style={styles.profileEmail}>{userProfile.email}</Text>
-          <Text style={styles.profileJoinDate}>{userProfile.joinDate}</Text>
-        </View>
-        <Pressable style={styles.editButton}>
-          <Edit size={20} color="#4682B4" />
-        </Pressable>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Setting2 color={colors.white()} variant="Linear" size={24} />
       </View>
-
-      {/* Stats */}
-      <View style={styles.statsContainer}>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{userProfile.stats.albums}</Text>
-          <Text style={styles.statLabel}>Albums</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{userProfile.stats.playlists}</Text>
-          <Text style={styles.statLabel}>Playlists</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{userProfile.stats.following}</Text>
-          <Text style={styles.statLabel}>Following</Text>
-        </View>
-      </View>
-
-      {/* Favorite Artists */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Favorite Artists</Text>
-          <Pressable>
-            <Text style={styles.seeAll}>See All</Text>
-          </Pressable>
-        </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.artistsContainer}>
-          {userProfile.favoriteArtists.map((artist) => (
-            <View key={artist.id} style={styles.artistCard}>
-              <Image source={{ uri: artist.image }} style={styles.artistImage} />
-              <Text style={styles.artistName}>{artist.name}</Text>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.contentContainer}>
+        <View style={styles.profileContainer}>
+          <Image
+            style={styles.profilePic}
+            source={{ uri: ProfileData.profilePict }}
+            resizeMode="cover"
+          />
+          <View style={styles.profileInfo}>
+            <Text style={styles.profileName}>{ProfileData.name}</Text>
+            <Text style={styles.profileInfoText}>Member since {ProfileData.createdAt}</Text>
+          </View>
+          <View style={styles.statsContainer}>
+            <View style={styles.statsItem}>
+              <Text style={styles.statsSum}>{ProfileData.blogPosted}</Text>
+              <Text style={styles.statsTag}>Posted</Text>
             </View>
+            <View style={styles.statsItem}>
+              <Text style={styles.statsSum}>{formatNumber(ProfileData.following)}</Text>
+              <Text style={styles.statsTag}>Following</Text>
+            </View>
+            <View style={styles.statsItem}>
+              <Text style={styles.statsSum}>{formatNumber(ProfileData.follower)}</Text>
+              <Text style={styles.statsTag}>Followers</Text>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.buttonEdit}>
+            <Text style={styles.buttonText}>Edit Profile</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.blogListContainer}>
+          {data.map((item, index) => (
+            <ItemSmall item={item} key={index} />
           ))}
-        </ScrollView>
-      </View>
-
-      {/* Recently Played */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Recently Played</Text>
-          <Pressable>
-            <Text style={styles.seeAll}>See All</Text>
-          </Pressable>
         </View>
-        {userProfile.recentPlays.map((song) => (
-          <Pressable key={song.id} style={styles.recentItem}>
-            <Image source={{ uri: song.albumCover }} style={styles.recentImage} />
-            <View style={styles.recentInfo}>
-              <Text style={styles.recentTitle}>{song.title}</Text>
-              <Text style={styles.recentArtist}>{song.artist}</Text>
-            </View>
-            <View style={styles.recentMeta}>
-              <Text style={styles.recentTime}>{song.time}</Text>
-              <Pressable style={styles.recentPlayButton}>
-                <Play size={16} color="#4682B4" variant="Bold" />
-              </Pressable>
-            </View>
-          </Pressable>
-        ))}
-      </View>
-
-      {/* Settings Button */}
-      <Pressable style={styles.settingsButton}>
-        <Setting size={24} color="#4682B4" />
-        <Text style={styles.settingsText}>Settings</Text>
-      </Pressable>
-      <TouchableOpacity 
-        style={styles.addAlbumButton}
-        onPress={() => navigation.navigate('AddAlbumForm')}
-      >
-        <Add size={20} color="#4682B4" />
-        <Text style={styles.addAlbumButtonText}>Add Album</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
-// Keep all your styles the same
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
-    paddingHorizontal: 20,
+    backgroundColor: colors.white(),
   },
-  profileHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 20,
-    marginBottom: 30,
+  header: {
+    paddingHorizontal: 24,
+    paddingTop: 10,
+    paddingBottom: 10,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    backgroundColor: colors.blue(),
   },
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginRight: 16,
+  contentContainer: {
+    paddingBottom: 20,
   },
-  profileInfo: {
-    flex: 1,
+  profileContainer: {
+    alignItems: 'center',
+    padding: 20,
   },
-  profileName: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#1A1A2E",
-    marginBottom: 4,
-  },
-  profileEmail: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 4,
-  },
-  profileJoinDate: {
-    fontSize: 12,
-    color: "#888",
-  },
-  editButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#f0f8ff",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  statsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 30,
-    paddingHorizontal: 20,
-  },
-  statItem: {
-    alignItems: "center",
-  },
-  statNumber: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#4682B4",
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 14,
-    color: "#666",
-  },
-  section: {
-    marginBottom: 25,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#4682B4",
-  },
-  seeAll: {
-    fontSize: 14,
-    color: "#4682B4",
-  },
-  artistsContainer: {
-    paddingRight: 20,
-  },
-  artistCard: {
-    width: 100,
-    marginRight: 15,
-    alignItems: "center",
-  },
-  artistImage: {
+  profilePic: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 8,
-  },
-  artistName: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#1A1A2E",
-    textAlign: "center",
-  },
-  recentItem: {
-    flexDirection: "row",
-    alignItems: "center",
     marginBottom: 15,
-    backgroundColor: "#f9f9f9",
-    borderRadius: 10,
-    padding: 10,
   },
-  recentImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 5,
-    marginRight: 12,
-  },
-  recentInfo: {
-    flex: 1,
-  },
-  recentTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#1A1A2E",
-    marginBottom: 4,
-  },
-  recentArtist: {
-    fontSize: 14,
-    color: "#666",
-  },
-  recentMeta: {
-    alignItems: "flex-end",
-  },
-  recentTime: {
-    fontSize: 12,
-    color: "#888",
+  profileName: {
+    fontSize: 20,
+    fontFamily: fontType['Pjs-Bold'],
+    color: colors.black(),
     marginBottom: 5,
   },
-  recentPlayButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: "#f0f8ff",
-    justifyContent: "center",
-    alignItems: "center",
+  profileInfoText: {
+    fontSize: 14,
+    fontFamily: fontType['Pjs-Regular'],
+    color: colors.grey(),
   },
-  settingsButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 15,
-    backgroundColor: "#f0f8ff",
-    borderRadius: 10,
-    marginVertical: 20,
-    justifyContent: "center",
-  },
-  settingsText: {
-    fontSize: 16,
-    color: "#4682B4",
-    fontWeight: "500",
-    marginLeft: 10,
-  },
-  addAlbumButton: {
+  statsContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 15,
-    backgroundColor: '#f0f8ff',
-    borderRadius: 10,
-    marginBottom: 15,
+    justifyContent: 'space-between',
+    width: '80%',
+    marginVertical: 20,
   },
-  addAlbumButtonText: {
-    marginLeft: 10,
-    color: '#4682B4',
-    fontWeight: '500',
-},
+  statsItem: {
+    alignItems: 'center',
+  },
+  statsSum: {
+    fontSize: 18,
+    fontFamily: fontType['Pjs-Bold'],
+    color: colors.black(),
+  },
+  statsTag: {
+    fontSize: 12,
+    fontFamily: fontType['Pjs-Regular'],
+    color: colors.grey(),
+  },
+  buttonEdit: {
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    backgroundColor: colors.blue(),
+    borderRadius: 20,
+    marginBottom: 20,
+  },
+  buttonText: {
+    fontSize: 14,
+    fontFamily: fontType['Pjs-SemiBold'],
+    color: colors.white(),
+  },
+  blogListContainer: {
+    paddingHorizontal: 24,
+    gap: 10,
+  },
 });
 
 export default Profile;

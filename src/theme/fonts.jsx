@@ -7,4 +7,5 @@ const fontType = {
     'Pjs-Bold' : 'PlusJakartaSans-Bold',
     'Pjs-ExtraBold' : 'PlusJakartaSans-ExtraBold',
 };
+
 export default fontType;
